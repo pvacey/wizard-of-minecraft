@@ -53,7 +53,7 @@ resources:
           # start container
           sudo docker start mc
           if [ $? -ne 0 ]; then
-            sudo docker run -d -it -e EULA=TRUE -p 25565:25565 --name mc itzg/minecraft-server
+            sudo docker run -d -it -e EULA=TRUE -e ENABLE_RCON=true -e RCON_PASSWORD=PLACEHOLDER_PASSWORD -p 25565:25565 -p 25575:25575 --name mc itzg/minecraft-server
           fi
 
 - name: firewall
