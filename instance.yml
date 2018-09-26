@@ -1,0 +1,61 @@
+imports:
+- path: firewall.jinja
+
+resources:
+- type: compute.v1.instance
+  name: minecraft-vm
+  properties:
+    zone: us-central1-f
+    machineType: https://www.googleapis.com/compute/v1/projects/PROJECT_ID/zones/us-central1-f/machineTypes/g1-small
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
+    networkInterfaces:
+    - network: https://www.googleapis.com/compute/v1/projects/PROJECT_ID/global/networks/default
+      # Access Config required to give the instance a public IP address
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+    metadata:
+      items:
+      - key: startup-script
+        value: |
+          #!/bin/bash
+          # install dbus for the shutdown util
+          sudo apt-get install dbus -y
+
+          # install docker repo and docker-ce
+          which docker
+          if [ $? -ne 0 ]; then
+            echo "install docker dependencies"
+            sudo apt-get update
+            sudo apt-get install -y \
+                 apt-transport-https \
+                 ca-certificates \
+                 curl \
+                 gnupg2 \
+                 software-properties-common
+            echo "install docker repository"
+            curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+            sudo add-apt-repository \
+               "deb [arch=amd64] https://download.docker.com/linux/debian \
+               $(lsb_release -cs) \
+               stable"
+            echo "install docker-ce"
+            sudo apt-get update
+            sudo apt-get install docker-ce -y
+          fi
+
+          # start container
+          sudo docker start mc
+          if [ $? -ne 0 ]; then
+            sudo docker run -d -it -e EULA=TRUE -p 25565:25565 --name mc itzg/minecraft-server
+          fi
+
+- name: firewall
+  type: firewall.jinja
+  properties:

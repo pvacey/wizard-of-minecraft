@@ -1,0 +1,9 @@
+resources:
+- type: gcp-types/compute-v1:firewalls
+  name: allow-{{ env["deployment"] }}
+  properties:
+    network: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/global/networks/default
+    sourceRanges: [0.0.0.0/0]
+    allowed:
+    - IPProtocol: tcp
+      ports: ['25565']
