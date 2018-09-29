@@ -5,6 +5,7 @@ import os
 import googleapiclient.discovery
 import dialogflow_v2 as dialogflow
 import mcrcon
+import time
 
 PROJECT_ID = 'minecraft-212921'
 ZONE = "us-central1-f"
@@ -12,18 +13,39 @@ ZONE = "us-central1-f"
 
 def log_handler(event, context):
     raw_event = json.loads(base64.b64decode(event['data']).decode('utf-8'))
+    print(event)
     raw_message = raw_event['jsonPayload']['message']
-    text = re.findall('\]:\s<\w+>\s(.*)\\r', raw_message)[0]
-    resp = ask_the_wizard(text)
-    handle_intent(resp)
+    #[Server thread/INFO]: vaks0731 left the game
+    
+    # chat messages
+    tmp = re.findall('\]:\s<\w+>\s(.*)\\r', raw_message)
+    if len(tmp) > 0:
+    	text = tmp[0]
+    	resp = ask_the_wizard(text)
+    	handle_intent(resp)
+    # disconnect message
+    tmp = re.findall('\]:\s\w+ left the game', raw_message)
+    if len(tmp) > 0:
+    	shut_it_down()
+    return
 
+def shut_it_down():
+    ip = lookup_instance()
+    resp = execute_rcon("/list", ip)
+    number = re.findall('There are (\d+) of a max 20 players online', resp)[0]
+    if number == "0":
+        execute_rcon("/stop", ip)
+        time.sleep(10)
+        return stop_instance()
+    return
+        
 def execute_rcon(cmd, ip):
     # send response
     rcon = mcrcon.MCRcon(ip, "WTFISTHIS")
     rcon.connect()
     response = rcon.command(cmd)
     rcon.disconnect()
-    #print(response)
+    return response
 
 def ask_the_wizard(text, session_id='123456', language_code='en-US'):
 
@@ -83,29 +105,17 @@ def lookup_instance():
 	compute = googleapiclient.discovery.build('compute', 'v1')
 	instances = compute.instances().list(project=PROJECT_ID, zone=ZONE, filter="name=minecraft-vm").execute()
 	return instances['items'][0]['networkInterfaces'][0]['accessConfigs'][0]['natIP']
+
+def stop_instance():
+	# find the minecraft vm IP
+	compute = googleapiclient.discovery.build('compute', 'v1')
+	instance_id = compute.instances().list(project=PROJECT_ID, zone=ZONE, filter="name=minecraft-vm").execute()['items'][0]['id']
+	return compute.instances().stop(project=PROJECT_ID, zone=ZONE, instance='minecraft-vm').execute()
     
+
 if __name__ == "__main__":
-	ip = lookup_instance()
-	execute_rcon('/time 0000',ip)
+	resp = stop_instance()
+	print(resp)
 #	resp = ask_the_wizard('can you make it sunny again?')
 #	handle_intent(resp)
 #	print(json.dumps(resp, indent=2))
-#	
-	
-#	resp = ask_the_wizard('hello')
-#	handle_intent(resp)
-#	print(json.dumps(resp, indent=2))
-
-
-#	resp = detect_intent_texts('minecraft-212921', '123456', 'can you make it rain?')
-#	print(resp['intent'])
-#	print(resp['intent_value'])
-#	print('----')
-#	resp = detect_intent_texts('minecraft-212921', '123456', 'will you make it sunny please?')
-#	print(resp['intent'])
-#	print(resp['intent_value'])
-#	print('----')
-#	resp = detect_intent_texts('minecraft-212921', '123456', 'hi')
-#	print(resp['intent'])
-#	print(resp['intent_value'])
-#	print('----')
