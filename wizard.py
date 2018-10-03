@@ -101,21 +101,17 @@ def handle_intent(intent):
 		execute_rcon("/say " + intent['response'], ip=ip)
     
 def lookup_instance():
-	# find the minecraft vm IP
-	compute = googleapiclient.discovery.build('compute', 'v1')
-	instances = compute.instances().list(project=PROJECT_ID, zone=ZONE, filter="name=minecraft-vm").execute()
-	return instances['items'][0]['networkInterfaces'][0]['accessConfigs'][0]['natIP']
+    # find the minecraft vm IP
+    compute = googleapiclient.discovery.build('compute', 'v1')
+    instances = compute.instances().list(project=PROJECT_ID, zone=ZONE, filter="name=minecraft-vm").execute()
+    return instances['items'][0]['networkInterfaces'][0]['accessConfigs'][0]['natIP']
 
 def stop_instance():
-	# find the minecraft vm IP
-	compute = googleapiclient.discovery.build('compute', 'v1')
-	instance_id = compute.instances().list(project=PROJECT_ID, zone=ZONE, filter="name=minecraft-vm").execute()['items'][0]['id']
-	return compute.instances().stop(project=PROJECT_ID, zone=ZONE, instance='minecraft-vm').execute()
+    # find the minecraft vm IP
+    compute = googleapiclient.discovery.build('compute', 'v1')
+    instance_id = compute.instances().list(project=PROJECT_ID, zone=ZONE, filter="name=minecraft-vm").execute()['items'][0]['id']
+    return compute.instances().stop(project=PROJECT_ID, zone=ZONE, instance='minecraft-vm').execute()
     
 
 if __name__ == "__main__":
-	resp = stop_instance()
-	print(resp)
-#	resp = ask_the_wizard('can you make it sunny again?')
-#	handle_intent(resp)
-#	print(json.dumps(resp, indent=2))
+    print('')
