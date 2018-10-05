@@ -7,7 +7,8 @@ import dialogflow_v2 as dialogflow
 import mcrcon
 import time
 
-PROJECT_ID = 'minecraft-212921'
+PROJECT_ID = 'PLACEHOLDER_PROJECT_ID'
+PASSWORD = "PLACEHOLDER_PASSWORD"
 ZONE = "us-central1-f"
 
 
@@ -15,7 +16,6 @@ def log_handler(event, context):
     raw_event = json.loads(base64.b64decode(event['data']).decode('utf-8'))
     print(event)
     raw_message = raw_event['jsonPayload']['message']
-    #[Server thread/INFO]: vaks0731 left the game
     
     # chat messages
     tmp = re.findall('\]:\s<\w+>\s(.*)\\r', raw_message)
@@ -41,7 +41,7 @@ def shut_it_down():
         
 def execute_rcon(cmd, ip):
     # send response
-    rcon = mcrcon.MCRcon(ip, "WTFISTHIS")
+    rcon = mcrcon.MCRcon(ip, PASSWORD)
     rcon.connect()
     response = rcon.command(cmd)
     rcon.disconnect()
