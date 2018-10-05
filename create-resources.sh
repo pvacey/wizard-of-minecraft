@@ -20,8 +20,8 @@ gcloud beta pubsub topics create minecraft-logs
 
 # create filters to send events to the pubsub topic
 echo "[*] create stackdriver logging sinks"
-gcloud beta logging sinks create minecraft-chat-logs pubsub.googleapis.com/projects/minecraft-212921/topics/minecraft-logs --log-filter='jsonPayload.instance.name="minecraft-vm" "]: <"'
-gcloud beta logging sinks create minecraft-disconnect-logs pubsub.googleapis.com/projects/minecraft-212921/topics/minecraft-logs --log-filter='jsonPayload.instance.name="minecraft-vm" "left the game"'
+gcloud beta logging sinks create minecraft-chat-logs pubsub.googleapis.com/projects/$GOOGLE_CLOUD_PROJECT/topics/minecraft-logs --log-filter='jsonPayload.instance.name="minecraft-vm" "]: <"'
+gcloud beta logging sinks create minecraft-disconnect-logs pubsub.googleapis.com/projects/$GOOGLE_CLOUD_PROJECT/topics/minecraft-logs --log-filter='jsonPayload.instance.name="minecraft-vm" "left the game"'
 
 # grant sink identities access to pubsub
 echo "[*] grant logging sink identities access to pubsub topic"
@@ -48,3 +48,8 @@ IP=$(gcloud compute instances describe minecraft-vm --zone us-central1-f | grep 
 echo
 echo "Minecraft Server IP: $IP"
 echo
+
+echo "Enable the DialogFlow API:"
+echo "https://console.cloud.google.com/apis/library/dialogflow.googleapis.com?q=dialog&project=$GOOGLE_CLOUD_PROJECT"
+echo
+
