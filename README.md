@@ -2,6 +2,8 @@
 The Wizard of Minecraft is a Google DialogFlow chat bot that performs Minecraft server admin commands when you ask it nicely.
 ![ingame screenshot of the wizard](/readme.png)
 
+![ingame screenshot of the wizard](/readme.png)
+
 ## Getting Started
 This project is designed to be quickly deployed on the Google Cloud Platform (GCP).
 
@@ -56,9 +58,9 @@ Below are the various services used by the project, what purpose they serve, and
     - is triggered by new logs entering the Pub/Sub topic
     - sends chat messages to DialogFlow agent to determine intents
       - executes RCON commands to the minecraft server via RCON based on the intent
-    - shuts down the server when there are `0` players left to save your money, you cheap son-of-a
+    - shuts down - [ ] he server when there are `0` players left to save your money, you cheap son-of-a
 - DialogFlow
   - receives player messages and determines the intent of the message  
 - Firewall Rules
-  - 0.0.0.0/0 via TCP 25565 for Minecraft
-  - 0.0.0.0/0 via TCP 25575 for Minecraft RCON
+  - `0.0.0.0/0 via TCP 25565` for Minecraft
+  - `0.0.0.0/0 via TCP 25575` for Minecraft RCON
