@@ -1,5 +1,6 @@
 # Wizard of Minecraft Wizard
 The Wizard of Minecraft is a Google DialogFlow chat bot that performs Minecraft server admin commands when you ask it nicely.
+![ingame screenshot of the wizard](/readme.png)
 
 ## Getting Started
 This project is designed to be quickly deployed on the Google Cloud Platform (GCP).
