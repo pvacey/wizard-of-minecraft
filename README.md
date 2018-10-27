@@ -9,7 +9,7 @@ These steps walk you through the installation of the various infrastructure reso
 1. create a new GCP project to deploy the infrastructure into
 2. open the google cloud platform shell
 3. clone this repo into your cloud shell `git clone https://github.com/pvacey/wizard-of-minecraft.git`
-4. enter the repo directory `cd minecraft-gcp`
+4. enter the repo directory `cd wizard-of-minecraft`
 5. run the installer script `bash create-resources.sh`
 6. when prompted by the script, enable the service APIs required to deploy the resources
 7. the script finishes deploying the infrastructure and displays `Minecraft Server IP: X.X.X.X`, use this to connect to your server (it will take several minutes for the server to become available)
