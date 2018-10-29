@@ -63,3 +63,6 @@ Below are the various services used by the project, what purpose they serve, and
 - Firewall Rules
   - `0.0.0.0/0 via TCP 25565` for Minecraft
   - `0.0.0.0/0 via TCP 25575` for Minecraft RCON
+
+## References
+[Minecraft Command Documentation](https://minecraft.gamepedia.com/Commands)
